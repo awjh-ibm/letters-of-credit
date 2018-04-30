@@ -79,13 +79,18 @@ push_app() {
     # Push app (don't start yet, wait for binding)
     date
     printf "\n --- Getting the Letters of credit application '${CF_APP}' ---\n"
-    # EVENTUALLY NPM INSTALL IT AND DO THAT
-    export REACT_APP_REST_SERVER_CONFIG="{\"webSocketURL\": \"wss://composer-rest-server-${CF_APP}.mybluemix.net\", \"httpURL\": \"https://composer-rest-server-${CF_APP}.mybluemix.net/api\"}"
+    # EVENTUALLY GET IT FROM NPM INSTEAD OF GITHUB
     git clone https://github.com/erin-hughes/composer-sample-applications
     cd composer-sample-applications
     git checkout loc-app
     npm install
     cd packages/letters-of-credit
+    export REST_SERVER_URL=$(cf app composer-rest-server-${CF_APP} | grep routes: | awk '{print $2}')
+    export PLAYGROUND_URL=$(cf app composer-playground-${CF_APP} | grep routes: | awk '{print $2}')
+    touch .env
+    echo "REACT_APP_REST_SERVER_CONFIG='{\"webSocketURL\": \"wss://${REST_SERVER_URL}\", \"httpURL\": \"https://${REST_SERVER_URL}/api\"}'" > .env
+    echo "REACT_APP_REST_SERVER_URL=${REST_SERVER_URL}" >> .env
+    echo "REACT_APP_PLAYGROUND_SERVER_URL=${PLAYGROUND_URL}" >> .env
     npm run build
     cd build
     touch Staticfile
@@ -103,11 +108,6 @@ start_app() {
     date
     printf "\n --- Binding the IBM Blockchain Platform service to Letters of credit app ---\n"
     cf bind-service ${CF_APP} "${SERVICE_INSTANCE_NAME}" -c "{\"permissions\":\"read-only\"}"
-
-    export REST_SERVER_URL=$(cf app composer-rest-server-${CF_APP} | grep routes: | awk '{print $2}')
-    export PLAYGROUND_URL=$(cf app composer-playground-${CF_APP} | grep routes: | awk '{print $2}')
-    cf set-env ${CF_APP} REST_SERVER_URL "https://${REST_SERVER_URL}"
-    cf set-env ${CF_APP} PLAYGROUND_URL "https://${PLAYGROUND_URL}"
 
     # Start her up
     date

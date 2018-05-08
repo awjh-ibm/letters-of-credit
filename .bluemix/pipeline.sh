@@ -88,9 +88,8 @@ push_app() {
     export REST_SERVER_URL=$(cf app composer-rest-server-${CF_APP} | grep routes: | awk '{print $2}')
     export PLAYGROUND_URL=$(cf app composer-playground-${CF_APP} | grep routes: | awk '{print $2}')
     touch .env
-    echo "REACT_APP_REST_SERVER_CONFIG='{\"webSocketURL\": \"wss://${REST_SERVER_URL}\", \"httpURL\": \"https://${REST_SERVER_URL}/api\"}'" > .env
-    echo "REACT_APP_REST_SERVER_URL=${REST_SERVER_URL}" >> .env
-    echo "REACT_APP_PLAYGROUND_SERVER_URL=${PLAYGROUND_URL}" >> .env
+    echo "REACT_APP_REST_SERVER_CONFIG='{\"webSocketURL\": \"wss://${REST_SERVER_URL}\", \"httpURL\": \"https://${REST_SERVER_URL}/api\", \"explorer\": \"https://${REST_SERVER_URL}/explorer\"}'"  > .env
+    echo "REACT_APP_PLAYGROUND_CONFIG='{\"name\": \"IBM Blockchain Platform: Develop\", \"docURL\": \"https://console.bluemix.net/docs/services/blockchain/develop.html#develop-the-network\", \"deployedURL\": \"https://${PLAYGROUND_URL}\"}'" >> .env
     npm run build
     cd build
     touch Staticfile

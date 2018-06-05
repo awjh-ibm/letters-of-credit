@@ -79,12 +79,8 @@ push_app() {
     # Push app (don't start yet, wait for binding)
     date
     printf "\n --- Getting the Letters of credit application '${CF_APP}' ---\n"
-    # EVENTUALLY GET IT FROM NPM INSTEAD OF GITHUB
-    git clone https://github.com/erin-hughes/composer-sample-applications
-    cd composer-sample-applications
-    git checkout loc-app
-    npm install
-    cd packages/letters-of-credit
+    npm install letters-of-credit@0.0.10
+    cd node_modules/letters-of-credit
     export REST_SERVER_URL=$(cf app composer-rest-server-${CF_APP} | grep routes: | awk '{print $2}')
     export PLAYGROUND_URL=$(cf app composer-playground-${CF_APP} | grep routes: | awk '{print $2}')
     touch .env
@@ -393,18 +389,14 @@ printf "\n ---- Created admin card ----- \n "
 ## -----------------------------------------------------------
 date
 printf "\n --- get network --- \n"
-# TODO make this use npm
-curl -o letters-of-credit-network.bna -L https://github.com/erin-hughes/composer-sample-applications/raw/loc-app/packages/letters-of-credit/letters-of-credit-network%400.2.4.bna
-# npm install letters-of-credit-network@unstable
+npm install letters-of-credit-network@0.2.5
 date
 printf "\n --- got network --- \n"
 
 date
 printf "\n --- create archive --- \n"
-# TODO use this when using npm
-BUSINESS_NETWORK_VERSION="0.2.4"
-# BUSINESS_NETWORK_VERSION=$(jq --raw-output '.version' ./node_modules/letters-of-credit-network/package.json)
-# composer archive create -a ./letters-of-credit-network.bna -t dir -n node_modules/letters-of-credit-network
+BUSINESS_NETWORK_VERSION=$(jq --raw-output '.version' ./node_modules/letters-of-credit-network/package.json)
+composer archive create -a ./letters-of-credit-network.bna -t dir -n node_modules/letters-of-credit-network
 date
 printf "\n --- created archive --- \n"
 
@@ -449,7 +441,7 @@ while ! composer network ping -c admin@letters-of-credit-network; do sleep 5; do
 
 date
 printf "\n --- setup demo --- \n"
-composer transaction submit -c admin@letters-of-credit-network -d '{"$class": "org.acme.loc.CreateDemoParticipants"}'
+composer transaction submit -c admin@letters-of-credit-network -d '{"$class": "org.example.loc.CreateDemoParticipants"}'
 
 date
 printf "\n --- imported business network card --- \n"

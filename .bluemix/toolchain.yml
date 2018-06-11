@@ -13,9 +13,9 @@ template:
     - loc-repo
   info:
     git url: >-
-      [https://github.com/awjh-ibm/letters-of-credit](https://github.com/awjh-ibm/letters-of-credit)
+      [https://github.com/ibm-blockchain/letters-of-credit](https://github.com/ibm-blockchain/letters-of-credit)
     git branch: >-
-      [master](https://github.com/awjh-ibm/letters-of-credit/tree/master)
+      [master](https://github.com/ibm-blockchain/letters-of-credit/tree/master)
 toolchain:
   name: 'letters-of-credit-tc-{{timestamp}}'
   template:
@@ -26,7 +26,7 @@ services:
     service_id: githubpublic
     parameters:
       repo_name: 'letters-of-credit-{{timestamp}}'
-      repo_url: 'https://github.com/awjh-ibm/letters-of-credit'
+      repo_url: 'https://github.com/ibm-blockchain/letters-of-credit'
       type: clone
       has_issues: false
       enable_traceability: true
@@ -54,8 +54,8 @@ services:
     parameters:
       type: 'Letters of Credit'
       lifecyclePhase: 'RUN'
-      imageUrl: 'https://github.com/awjh-ibm/letters-of-credit/raw/master/public/imgs/LetterOfCreditToolchainDiagram.png'
-      documentationUrl: 'https://github.com/awjh-ibm/letters-of-credit'
+      imageUrl: 'https://github.com/ibm-blockchain/letters-of-credit/raw/master/public/imgs/LetterOfCreditToolchainDiagram.png'
+      documentationUrl: 'https://github.com/ibm-blockchain/letters-of-credit'
       name: 'Node.js Application'
       dashboard_url: 'https://{{form.pipeline.parameters.prod-app-name}}.mybluemix.net/login'
       description: 'This is your Letters of Credit application. You do not need to modify anything.'
